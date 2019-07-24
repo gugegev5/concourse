@@ -95,7 +95,7 @@ func (factory *stepFactory) PutStep(
 		factory.resourceFactory,
 		factory.resourceConfigFactory,
 		factory.strategy,
-		factory.pool,
+		factory.client,
 		delegate,
 	)
 
