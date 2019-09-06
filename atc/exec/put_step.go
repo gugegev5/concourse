@@ -35,7 +35,7 @@ type PutStep struct {
 	resourceFactory       resource.ResourceFactory
 	resourceConfigFactory db.ResourceConfigFactory
 	strategy              worker.ContainerPlacementStrategy
-	workerClient      	  worker.Client
+	workerClient          worker.Client
 	delegate              PutDelegate
 	succeeded             bool
 }
@@ -60,7 +60,7 @@ func NewPutStep(
 		secrets:               secrets,
 		resourceFactory:       resourceFactory,
 		resourceConfigFactory: resourceConfigFactory,
-		workerClient:     	   workerClient,
+		workerClient:          workerClient,
 		strategy:              strategy,
 		delegate:              delegate,
 	}
@@ -127,7 +127,7 @@ func (step *PutStep) Run(ctx context.Context, state RunState) error {
 
 		Env: step.metadata.Env(),
 
-		Inputs: containerInputs,
+		InputFooBars: containerInputs,
 	}
 
 	workerSpec := worker.WorkerSpec{
@@ -147,7 +147,6 @@ func (step *PutStep) Run(ctx context.Context, state RunState) error {
 		ResourceTypes: resourceTypes,
 		Delegate:      step.delegate,
 	}
-
 
 	events := make(chan runtime.Event, 1)
 	go func(logger lager.Logger, events chan runtime.Event, delegate PutDelegate) {
@@ -183,8 +182,8 @@ func (step *PutStep) Run(ctx context.Context, state RunState) error {
 		imageSpec,
 		resourceDir,
 		worker.ProcessSpec{
-			Path: "/opt/resource/out",
-			Args: []string{resourceDir},
+			Path:         "/opt/resource/out",
+			Args:         []string{resourceDir},
 			StdoutWriter: step.delegate.Stdout(),
 			StderrWriter: step.delegate.Stderr(),
 		},

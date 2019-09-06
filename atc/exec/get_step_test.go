@@ -9,6 +9,8 @@ import (
 	"io"
 	"io/ioutil"
 
+	"github.com/concourse/concourse/atc/runtime"
+
 	"code.cloudfoundry.org/lager/lagertest"
 	"github.com/DataDog/zstd"
 	"github.com/concourse/concourse/atc"
@@ -16,7 +18,7 @@ import (
 	"github.com/concourse/concourse/atc/db"
 	"github.com/concourse/concourse/atc/db/dbfakes"
 	"github.com/concourse/concourse/atc/exec"
-	"github.com/concourse/concourse/atc/exec/artifact"
+	"github.com/concourse/concourse/atc/exec/build"
 	"github.com/concourse/concourse/atc/exec/execfakes"
 	"github.com/concourse/concourse/atc/fetcher/fetcherfakes"
 	"github.com/concourse/concourse/atc/resource"
@@ -46,7 +48,7 @@ var _ = Describe("GetStep", func() {
 		fakeVersionedSource       *resourcefakes.FakeVersionedSource
 		interpolatedResourceTypes atc.VersionedResourceTypes
 
-		artifactRepository *artifact.Repository
+		artifactRepository *build.Repository
 		state              *execfakes.FakeRunState
 
 		getStep exec.Step
@@ -84,7 +86,7 @@ var _ = Describe("GetStep", func() {
 		fakeSecretManager = new(credsfakes.FakeSecrets)
 		fakeSecretManager.GetReturns("super-secret-source", nil, true, nil)
 
-		artifactRepository = artifact.NewRepository()
+		artifactRepository = build.NewRepository()
 		state = new(execfakes.FakeRunState)
 		state.ArtifactsReturns(artifactRepository)
 
@@ -403,7 +405,7 @@ var _ = Describe("GetStep", func() {
 						Context("but the stream is empty", func() {
 							It("returns ErrFileNotFound", func() {
 								_, err := artifactSource.StreamFile(context.TODO(), testLogger, "some-path")
-								Expect(err).To(MatchError(exec.FileNotFoundError{Path: "some-path"}))
+								Expect(err).To(MatchError(runtime.FileNotFoundError{Path: "some-path"}))
 							})
 						})
 					})
