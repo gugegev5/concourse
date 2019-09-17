@@ -88,7 +88,16 @@ init flags =
     changeToBuild
         flags
         ( { page = flags.pageType
+          , id = 0
+          , name =
+                case flags.pageType of
+                    OneOffBuildPage id ->
+                        String.fromInt id
+
+                    JobBuildPage { buildName } ->
+                        buildName
           , now = Nothing
+          , job = Nothing
           , disableManualTrigger = False
           , history = []
           , nextPage = Nothing
@@ -747,7 +756,7 @@ viewBuildPage session model =
                 , style "flex-direction" "column"
                 , style "overflow" "hidden"
                 ]
-                [ Header.view session model build
+                [ Header.view session model
                 , body
                     session
                     { prep = model.prep
